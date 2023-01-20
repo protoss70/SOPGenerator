@@ -1,0 +1,105 @@
+.sign{
+    display: flex;
+    position: absolute;
+    z-index: -1;
+    top:  50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.instantLogIn{
+    gap: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+    font-weight: 700;
+    box-shadow: 0px 0px 1px 0.5px rgba(0,0,0,0.2);
+}
+
+.googleSign{
+    display: flex;
+    width: 250px;
+    background-color: #FFFFFF;
+    padding: 5px;
+    border-radius: 2px;
+    box-shadow: 0px 0px 1px 0.5px rgba(0,0,0,0.1);
+}
+
+.googleSign:hover{
+    background-color: rgba(255,255,255, 0.3);
+    cursor: pointer;
+}
+
+.googleSignText{
+    flex-basis: 100%;
+    text-align: center;
+}
+
+.restSign{
+    box-shadow: 0px 0px 1px 0.5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 400px;
+    background-color: #FFFFFF;
+    padding: 10px;
+    border-radius: 2px;
+}
+
+/* .restSign > div > input, .restSign > div > select{
+    width: 200px !important;
+    border-width: 0.1px !important;
+} */
+
+/* .restSign > div{
+    padding: 3px;
+    display: flex;
+    justify-content: space-between;
+} */
+
+/* .restSign > div > label{
+    line-height: 34px;
+} */
+
+.restSign > .submit{
+    justify-content: space-between;
+}
+
+.restSign > .submit > a{
+    line-height: 44px;
+}
+
+.submit-end{
+    justify-content: end !important;
+}
+
+.googleIcon{
+    height: 35px;
+}
+
+.googleLogText{
+    line-height: 30px;
+    font-size: 20px;
+    font-weight:400;
+}
+
+.verif{
+    padding: 5%;
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.verif > div{
+    padding: 2%;
+    box-shadow: 0px 0px 1px 0.5px rgba(0,0,0,0.3);
+}
+
