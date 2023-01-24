@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "sop-generator"
-  }
+  },
+  "targets": {
+    "sop-generator": {
+      "hosting": {
+        "sop": [
+          "sop-generator"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
