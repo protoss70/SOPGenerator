@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "target": "sop-generator",
+    "target": "sop",
     "public": "build",
     "ignore": [
       "firebase.json",
