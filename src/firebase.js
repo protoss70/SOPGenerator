@@ -22,25 +22,25 @@ fire.getUserData = async (email) => {
 
 fire.initApp = () => {
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDoCAwkF2PUX8ZW2eMbbjEeRFSGZAw1i_I",
-      authDomain: "sop-generator.firebaseapp.com",
-      projectId: "sop-generator",
-      storageBucket: "sop-generator.appspot.com",
-      messagingSenderId: "960257251812",
-      appId: "1:960257251812:web:bd9053e7eaea74ad9c0ff1",
-      measurementId: "G-P1HCJ2KTVM"
-    };
-    
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    // const analytics = firebase.getAnalytics(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyDoCAwkF2PUX8ZW2eMbbjEeRFSGZAw1i_I",
+    authDomain: "sop-generator.firebaseapp.com",
+    projectId: "sop-generator",
+    storageBucket: "sop-generator.appspot.com",
+    messagingSenderId: "960257251812",
+    appId: "1:960257251812:web:bd9053e7eaea74ad9c0ff1",
+    measurementId: "G-P1HCJ2KTVM"
+  };
+  
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  // const analytics = firebase.getAnalytics(app);
 
-    auth = firebase.auth();
-    firestore = firebase.firestore();
-    analytics = firebase.analytics();
+  auth = firebase.auth();
+  firestore = firebase.firestore();
+  analytics = firebase.analytics();
 
-    return {app};
+  return {app};
 }
 
 fire.SignIn = async () => {
@@ -57,8 +57,55 @@ fire.SignOut = () => {
 }
 
 fire.checkExistingUser = async (ref) => {
-  const result = await ref.get();
-  return result.data();
+	//if exists: user data, else returns 'undefined'
+  	const result = await ref.get();
+  	return result.data();
+}
+
+fire.sendInvite = async (userData, settings) => {
+	async function properInvCheck(userData, settings){
+		if (userData === null) return false;
+		if (settings.email === null || settings.email === undefined || settings.email === "") return false;
+		if (settings.roles === null || settings.roles === undefined) return false;
+		if (await fire.checkExistingUser(firestore.collection("Users").doc(settings.email))) return false;
+		console.log("No Security Errors")
+		return true;
+	}
+	if (!(await properInvCheck(userData, settings))) return false;
+	console.log("here");
+	const date = new Date(Date.now()).toUTCString();
+	const inviteRef = firestore.collection('Users').doc(settings.email);
+	const userRef = firestore.collection("Users").doc(userData.data.email);
+	setDoc(inviteRef, {
+		email: settings.email,
+    userInv: {
+      invitedBy: userData.data.email,
+      inviteDate: date,
+    },
+		init: true
+	}).then((res) => {
+		console.log("Sent Invitation", res);
+		var newInv = userData.data.invitations === undefined || userData.data.invitations === null 
+    ? [{email: settings.email, date}] : [...userData.data.invitations, {email: settings.email, date}];
+    console.log(userData.invitations);
+    console.log(newInv);
+		//Update the invitations of the inviting person
+		userRef.update({invitations: newInv}).then((res2) => {
+			console.log("Update User Invs", res2);
+			if (settings.successCallback) settings.successCallback();
+		})
+
+		//Set private document for new user
+		const privateRef = inviteRef.collection("Private").doc("Roles");
+		setDoc(privateRef, {
+			Roles: settings.roles
+		}).then((res3) => {
+			console.log("private set for the invited person", res3);
+		})
+		}
+	)
+
+	return true;
 }
 
 fire.newUser = async () => {
@@ -71,8 +118,9 @@ fire.newUser = async () => {
       const {uid, photoURL, displayName, email, emailVerified, phoneNumber} = user;
       console.log(uid, photoURL, displayName, email, emailVerified, phoneNumber);
     
-      await setDoc(firestore.collection("Users").doc(email), {
+      await firestore.collection("Users").doc(email).update({
         name: displayName,
+        init: false,
         email,
         emailVerified,
         phoneNumber,

@@ -1,0 +1,105 @@
+.adminContainer{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: 100px;
+    padding-top: 20px;
+    padding: 20px 20%;
+}
+
+#adminPanel{
+    min-width: 65%;
+    display: flex;
+    flex-direction: column;
+    border-style: solid;
+    border-color: #b5b3b3;
+    border-top-style: none;
+    border-bottom-style: none;
+    border-width: 2px;
+    border-radius: 5px;
+}
+
+.adminPanelRow{
+    display: flex;
+    flex-basis: 100%;
+}
+
+.activeNo{
+    color: darkred;
+    font-weight: bold;
+}
+
+.activeYes{
+    color: darkgreen;
+    font-weight: bold;
+}
+
+.generalFormHead{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 20px;
+    height: 40px;
+    border-color: #b5b3b3;
+    border-style:solid;
+    border-left-style: none;
+    border-right-style: none;
+    border-width: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.rolePadd{
+    padding: 10px 5px;
+}
+
+.topLeftPad{
+    border-top-left-radius: 5px;
+}
+
+.bottomLeftPad{
+    border-bottom-left-radius: 5px;
+}
+
+.bottomRightPad{
+    border-bottom-right-radius: 5px;
+}
+
+.topRightPad{
+    border-top-right-radius: 5px;
+}
+
+.addedElem{
+    border-top-style: none;
+}
+
+.nameFormHead{
+    flex-basis: 20%;
+}
+
+.activeFormHead{
+    flex-basis: 10%;
+}
+
+.roleFormHead{
+    flex-basis: 20%;
+}
+
+.emailFormHead{
+    flex-basis: 40%;
+}
+
+.headEmptySpace{
+    flex-basis: 10%;
+}
+
+.headEmptySpace::after{
+    content: "";
+}
+
+/*  email:40
+    role:20
+    name:20
+    active:10
+    total: 90%
+
+*/
