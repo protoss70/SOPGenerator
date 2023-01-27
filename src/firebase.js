@@ -43,6 +43,10 @@ fire.initApp = () => {
   return {app};
 }
 
+fire.updateUser = async (email, updates) => {
+  return await firestore.collection("Users").doc(email).update(updates);
+}
+
 fire.SignIn = async () => {
   const provider = new firebase.auth.GoogleAuthProvider();
   const res = await auth.signInWithPopup(provider);
@@ -86,7 +90,7 @@ fire.sendInvite = async (userData, settings) => {
 	}).then((res) => {
 		console.log("Sent Invitation", res);
 		var newInv = userData.data.invitations === undefined || userData.data.invitations === null 
-    ? [{email: settings.email, date}] : [...userData.data.invitations, {email: settings.email, date}];
+    ? [{email: settings.email, date}] : [...userData.data.invitations, {email: settings.email, date, Role: settings.roles[0], init: true}];
     console.log(userData.invitations);
     console.log(newInv);
 		//Update the invitations of the inviting person
@@ -106,6 +110,11 @@ fire.sendInvite = async (userData, settings) => {
 	)
 
 	return true;
+}
+
+fire.deleteUser = async (email) => {
+  await firestore.collection('Users').doc(email).collection("Private").doc("Roles").delete();
+  return await firestore.collection('Users').doc(email).delete();
 }
 
 fire.newUser = async () => {
