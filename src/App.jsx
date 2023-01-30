@@ -28,7 +28,9 @@ function App() {
       <Nav user={user} logout={fire.SignOut}/>
       <Routes>
         <Route path='/login' element={<LogIn user={{user, userData}} fire={{sign: fire.SignIn, checkExisting: fire.checkExisting, newUser: fire.newUser}}/>}></Route>
-        <Route path='/' element={<Home user={{user, userData}} fire={{invite: fire.sendInvite, delete: fire.deleteUser, update: fire.updateUser}}/>}/>
+        {['/', '/people', "/new", "/sop", "/files"].map(path => {return (
+          <Route path={path} element={<Home user={{user, userData}} fire={fire}/>}/>
+        )})}
       </Routes>
     </>
     );

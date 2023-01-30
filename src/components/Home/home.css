@@ -1,13 +1,12 @@
-.adminContainer{
+.adminContainer, .showcaseContainer{
     display: flex;
     justify-content: center;
     width: 100%;
     min-height: 100px;
-    padding-top: 20px;
-    padding: 20px 20%;
+    padding: 20px 5%;
 }
 
-#adminPanel{
+#adminPanel, .showcase{
     min-width: 100%;
     display: flex;
     flex-direction: column;
@@ -17,6 +16,42 @@
     border-bottom-style: none;
     border-width: 2px;
     border-radius: 5px;
+}
+
+.showcase{
+    border-style: solid;
+    padding: 3px 9px;
+}
+
+.sopAccess{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.sopAccessName{
+    margin: 0 0 0 5px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.showcasePersonMail{
+    border-bottom-style:double;
+    border-color: #b5b3b3;
+    border-width: 2px;
+}
+
+.sopAccessCheck{
+    height: 18px;
+    width: 18px;
+}
+
+.accessCheckCont{
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .adminPanelRow{
@@ -49,7 +84,14 @@
 }
 
 .generalFormSopHead{
-    height: 80px;
+    min-height: 40px;
+    max-height: 120px;
+    height: unset !important;
+}
+
+.homeAdmin{
+    display: flex;
+    justify-content: center;
 }
 
 .emailInputInv{
@@ -143,7 +185,7 @@
 }
 
 .adminPanelContainer{
-    flex-basis: 70%;
+    flex-basis: 100%;
 }
 
 .editIcon{
@@ -186,6 +228,20 @@
 
 .adminPanelRowUser:hover > .iconCont > img{
     visibility: visible;
+}
+
+.panels{
+    flex-basis: 50%;
+}
+
+.accessButtonCont{
+    display: flex;
+    justify-content: end;
+    gap: 3px;
+}
+
+.showcases{
+    flex-basis: 30%;
 }
 
 .adminPanelRowUser:hover{

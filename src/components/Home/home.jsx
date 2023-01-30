@@ -1,10 +1,12 @@
 import './home.css';
 import icons from '../../icons';
+import ReactDOM from 'react-dom/client';
 
 function Home(props) {
     const user = props.user.user;
     const userData = props.user.userData;
     const fire = props.fire;
+    const path = window.location.pathname;
     console.log(props);
 
     function userActive(){
@@ -18,21 +20,89 @@ function Home(props) {
         }else return false;
     }
 
-    async function deleteDocument(e){
-        const email = e.target.getAttribute("email");
-        document.getElementById(`adminPanelUser${email}`).remove();
-        await fire.delete(email);
-        userData.data.invitations = userData.data.invitations.filter((inv) => {
-            return inv.email !== email;
-        })
-        await fire.update(userData.data.email, {invitations: userData.data.invitations});
+    function cancelEditUser(){
+        const cases = document.getElementById("showcases");
+        cases.classList.add("hidden");
+        cases.textContent = "";
     }
 
-    function sendInvite(){
+    async function deleteDocument(e){
+        console.log("disabled for now!");
+        // const email = e.target.getAttribute("email");
+        // document.getElementById(`adminPanelUser${email}`).remove();
+        // await fire.deleteUser(email);
+        // userData.data.invitations = userData.data.invitations.filter((inv) => {
+        //     return inv.email !== email;
+        // })
+        // await fire.updateUser(userData.data.email, {invitations: userData.data.invitations});
+    }
+
+    async function updateSopFile(e) {
+        const activeFiles = []
+        userData.data.Files.forEach(file => {
+            if (document.getElementById(`fileCheck${file.Name}`).checked) activeFiles.push(file);
+        })
+        const sopName = e.target.getAttribute("sopName");
+        const sopId = findSopId(sopName)
+        console.log(sopId);
+        await fire.sopUpdate(sopId, {Files: activeFiles});
+        cancelEditUser();
+    }
+
+    async function updatePersonSop(e){
+        const activeSopsUser = []
+        userData.data.Sops.forEach(sop => {
+            if (document.getElementById(`sopCheck${sop.Name}`).checked) activeSopsUser.push(sop);
+        })
+        const email = e.target.getAttribute("email");
+        await fire.updateUser(email, {Sops: activeSopsUser});
+        cancelEditUser();
+    }
+
+    async function showcaseSet(e){
+        const email = e.target.getAttribute("email");
+        const cases = document.getElementById("showcases");
+        cases.textContent = "";
+        cases.classList.remove("hidden");
+        const data = await fire.getPerson(email);
+        const elem = showPerson(data);
+        const root = ReactDOM.createRoot(cases);
+        root.render(elem);
+    }
+
+    function findSopId(sopName){
+        var sopId = null;
+        userData.data.Sops.forEach(sop => {
+            if (sop.Name === sopName) sopId = sop.id;
+        });
+        return sopId
+    }
+
+    function findFileId(fileName){
+        var fileId = null;
+        userData.data.Files.forEach(file => {
+            if (file.Name === fileName) fileId = file.id;
+        });
+        return fileId
+    }
+
+    async function showcaseSetSop(e){
+        const sopName = e.target.getAttribute("sopName");
+        const cases = document.getElementById("showcases");
+        cases.textContent = "";
+        cases.classList.remove("hidden");
+        const sopId = findSopId(sopName);
+        const data = await fire.getSop(sopId);
+        const elem = showSop(data);
+        const root = ReactDOM.createRoot(cases);
+        root.render(elem);
+    }
+
+    async function sendInvite(){
         const email = document.getElementById("mailInv").value;
         const roles = [document.getElementById("userInvRoleSelect").value];
-        console.log(email, roles);
-        fire.invite(userData, {email, roles});
+        await fire.sendInvite(userData, {email, roles});
+        sendInviteShow(false);
     }
 
     function sendInviteShow(opt){
@@ -93,15 +163,81 @@ function Home(props) {
             </div>
         </div>
     </div>)
+    
 
     function adminSop(data){
         return (
         <div className='adminPanelRow adminPanelRowUser'>
             <div className="nameSopFormHead addedElem generalFormHead generalFormSopHead">{data.Name}</div>
             <div className="descriptionSopFormHead scrollable addedElem generalFormHead generalFormSopHead">{data.Description}</div>
-            <div className="iconCont generalFormHead addedElem generalFormSopHead"><img className='editIcon' src={icons.edit} alt="hehee" /></div>
-            <div className="iconCont generalFormHead addedElem generalFormSopHead"><img className='trashIcon' src={icons.trash} alt="hehee" /></div>
+            <div className="iconCont generalFormHead addedElem generalFormSopHead"><img className='editIcon' sopName={data.Name} onClick={(e) => {showcaseSetSop(e)}} src={icons.edit} alt="hehee" /></div>
+            <div className="iconCont generalFormHead addedElem generalFormSopHead"><img className='trashIcon' sopName={data.Name} src={icons.trash} alt="hehee" /></div>
         </div>)
+    }
+
+    function showSop(data){
+        function checkFile(fileName, check){
+            return(<div className="sopAccess">
+            <div className="accessCheckCont">
+                <input type="checkbox" defaultChecked={check} className={`sopAccessCheck ${check ? "checkedAccessBox" : ""}`} name={`fileCheck${fileName}`} id={`fileCheck${fileName}`} />
+            </div>
+            <label className="sopAccessName" htmlFor={`fileCheck${fileName}`}>{fileName}</label>
+        </div>)}
+
+        function findState(data, fileName){
+            if (data.Files === null || data.Files === undefined || data.Files.length === 0) return false;
+            var res = false;
+            data.Files.forEach(file => {
+                if(file.Name === fileName){
+                    res = true;
+                }
+            });
+            return res;
+        }
+        return(<div className="showcaseContainer">
+        <div className="showcase">
+            <div className="showcasePersonMail"><b>{data.Name}</b></div>
+            <h6>Files</h6>
+            {userData.data.Files.map(file => {return(checkFile(file.Name, findState(data, file.Name)))})}
+            <div className="accessButtonCont">
+                <button className="btn btn-secondary smallerButton" onClick={cancelEditUser}>Cancel</button>
+                <button className="btn btn-primary smallerButton" sopName={data.Name} onClick={(e) => {updateSopFile(e)}}>Done</button>
+            </div>
+        </div>
+    </div>)
+    }
+
+    function showPerson(data){
+        console.log(data);
+        function checkSop(sopName, check){
+            return(<div className="sopAccess">
+            <div className="accessCheckCont">
+                <input type="checkbox" defaultChecked={check} className={`sopAccessCheck ${check ? "checkedAccessBox" : ""}`} name={`sopCheck${sopName}`} id={`sopCheck${sopName}`} />
+            </div>
+            <label className="sopAccessName" htmlFor={`sopCheck${sopName}`}>{sopName}</label>
+        </div>)}
+
+        function findState(data, sopName){
+            if (data.Sops === null || data.Sops === undefined || data.Sops.length === 0) return false;
+            var res = false;
+            data.Sops.forEach(sop => {
+                if(sop.Name === sopName){
+                    res = true;
+                }
+            });
+            return res;
+        }
+        return(<div className="showcaseContainer">
+        <div className="showcase">
+            <div className="showcasePersonMail"><b>{data.email}</b></div>
+            <h6>Sop Access</h6>
+            {userData.data.Sops.map(sop => {return(checkSop(sop.Name, findState(data, sop.Name)))})}
+            <div className="accessButtonCont">
+                <button className="btn btn-secondary smallerButton" onClick={cancelEditUser}>Cancel</button>
+                <button className="btn btn-primary smallerButton" email={data.email} onClick={(e) => {updatePersonSop(e)}}>Done</button>
+            </div>
+        </div>
+    </div>)
     }
 
     function adminUser(data){
@@ -111,15 +247,19 @@ function Home(props) {
             <div className="emailFormHead addedElem generalFormHead">{data.email}</div>
             <div className="roleFormHead addedElem generalFormHead">{data.Role}</div>
             <div className="activeFormHead addedElem generalFormHead"><span className={data.init ? "activeNo" : "activeYes"}>{data.init ? "No" : "Yes"}</span></div>
-            <div className="iconCont generalFormHead addedElem"><img className='editIcon' src={icons.edit} alt="hehee" /></div>
+            <div className="iconCont generalFormHead addedElem"><img email={data.email} className='editIcon' src={icons.edit} onClick={(e) => {showcaseSet(e)}} alt="hehee" /></div>
             <div className="iconCont generalFormHead addedElem"><img email={data.email} onClick={(e) => {deleteDocument(e)}} className='trashIcon' src={icons.trash} alt="hehee" /></div>
         </div>)
     }
 
 	return (
-        <div>
-            {userActive() && userRoleCheck("Admin") ? adminUserPanel : <></>}
-            {userActive() && userRoleCheck("Admin") ? adminSopPanel : <></>}
+        <div className='homeAdmin'>
+            <div className='panels'>
+                {userActive() && userRoleCheck("Admin") && path === '/people' ? adminUserPanel : <></>}
+                {userActive() && userRoleCheck("Admin") && path === '/sop' ? adminSopPanel : <></>}
+            </div>
+            <div className='showcases hidden' id='showcases'>
+            </div>
         </div>
 	);
 }

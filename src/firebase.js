@@ -10,8 +10,20 @@ var auth = undefined;
 var firestore = undefined;
 var analytics = undefined;
 
+const searchedUsers = {};
+const searchedSops = {};
+
 fire.authUser = () => {
   return firebase.auth();
+}
+
+fire.getPerson = async (email) => {
+  if (!searchedUsers[email]){
+    const usersRef = firestore.collection('Users').doc(email);
+    searchedUsers[email] = (await usersRef.get()).data();
+    console.log("searched data");
+  }
+  return searchedUsers[email];
 }
 
 fire.getUserData = async (email) => {
@@ -44,7 +56,25 @@ fire.initApp = () => {
 }
 
 fire.updateUser = async (email, updates) => {
+  if (searchedUsers[email]){
+    searchedUsers[email] = null;
+  }
   return await firestore.collection("Users").doc(email).update(updates);
+}
+
+fire.getSop = async (id) => {
+  if (!searchedSops[id]){
+    const usersRef = firestore.collection('SOP').doc(id);
+    searchedSops[id] = (await usersRef.get()).data();
+  }
+  return searchedSops[id];
+}
+
+fire.sopUpdate = async (id, update) => {
+  if (searchedSops[id]){
+    searchedSops[id] = null;
+  }
+  return await firestore.collection("SOP").doc(id).update(update);
 }
 
 fire.SignIn = async () => {
