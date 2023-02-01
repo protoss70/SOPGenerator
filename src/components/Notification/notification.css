@@ -1,0 +1,39 @@
+#notificationBody{
+    border: none;
+    border-radius: 5px;
+    max-width: 450px;
+    padding: 3px 1%;
+    color:white;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+    position:absolute;
+    left: 50%;
+    top: 50px;
+    transform: translateX(-50%);
+    animation-name: comeFromTop;
+    animation-duration: 0.7s;
+    z-index: 100;
+    transition: opacity 0.4s ease-in;
+}
+
+@keyframes comeFromTop {
+    from {
+        top: -300px;
+    }
+    to {
+        top: 50px;
+     }
+}
+
+.greenNotif{
+    background-color: rgb(40,167,69);
+}
+
+.redNotif{
+    background-color: rgb(220,53,69);
+}
+
+.hideNotif{
+    opacity: 0;
+}

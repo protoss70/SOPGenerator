@@ -15,15 +15,18 @@ function Nav(props) {
 		setPath(window.location.pathname);
 	}, [window.location.pathname])
 
+	function hideShowcase(){
+		document.getElementById("panels").classList.remove('hidden');;
+		document.getElementById("showcases").classList.add("hidden");
+	}
+
     function loggedOptions(){
         return props.user !== null ? (
-
             <div>
                 <div className="listOfNavItems">
-                    <Link className='aOfNav' to={"/people"}><button className={`item1 btn navBtn ${path === "/people" ? "active" : ""}`}>People</button></Link>
-                    <Link className='aOfNav' to={"/sop"}><button className={`item2 btn navBtn ${path === "/sop" ? "active" : ""}`}>Sop's</button></Link>
-                    <Link className='aOfNav' to={"/files"}><button className={`item3 btn navBtn ${path === "/files" ? "active" : ""}`}>Files</button></Link>
-					<Link className='aOfNav' to={"/new"}><button className={`item2 btn navBtn ${path === "/new" ? "active" : ""}`}>New</button></Link>
+                    <Link className='aOfNav' to={"/people"}><button onClick={hideShowcase} className={`item1 btn navBtn ${path === "/people" ? "active" : ""}`}>People</button></Link>
+                    <Link className='aOfNav' to={"/sop"}><button onClick={hideShowcase} className={`item2 btn navBtn ${path === "/sop" ? "active" : ""}`}>Sop</button></Link>
+                    <Link className='aOfNav' to={"/files"}><button onClick={hideShowcase} className={`item3 btn navBtn ${path === "/files" ? "active" : ""}`}>Files</button></Link>
                 </div>
 			</div>
         ) : <></>

@@ -4,7 +4,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { setDoc } from "firebase/firestore";
 
-var fire = {}
+var fire = {db: firestore}
 
 var auth = undefined;
 var firestore = undefined;
@@ -12,6 +12,7 @@ var analytics = undefined;
 
 const searchedUsers = {};
 const searchedSops = {};
+const searchedFiles = {};
 
 fire.authUser = () => {
   return firebase.auth();
@@ -21,7 +22,6 @@ fire.getPerson = async (email) => {
   if (!searchedUsers[email]){
     const usersRef = firestore.collection('Users').doc(email);
     searchedUsers[email] = (await usersRef.get()).data();
-    console.log("searched data");
   }
   return searchedUsers[email];
 }
@@ -68,6 +68,22 @@ fire.getSop = async (id) => {
     searchedSops[id] = (await usersRef.get()).data();
   }
   return searchedSops[id];
+}
+
+fire.getFile = async (id) => {
+  if (!searchedFiles[id]){
+    const usersRef = firestore.collection('PDF').doc(id);
+    searchedFiles[id] = (await usersRef.get()).data();
+  }
+  return searchedFiles[id];
+}
+
+fire.updateFile = async (id, update) => {
+  if (searchedFiles[id]){
+    searchedFiles[id] = null;
+  }
+
+  return await firestore.collection("PDF").doc(id).update(update);
 }
 
 fire.sopUpdate = async (id, update) => {

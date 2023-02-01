@@ -39,6 +39,11 @@
     border-bottom-style:double;
     border-color: #b5b3b3;
     border-width: 2px;
+    padding: 3px 0;
+}
+
+input[type='checkbox']:hover{
+    cursor: pointer;
 }
 
 .sopAccessCheck{
@@ -130,8 +135,58 @@
     border-bottom-right-radius: 5px;
 }
 
+.urlFileFormHead{
+    flex-basis: 65%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap
+}
+
+.fileDescription{
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 10px;
+}
+
+.plusIconCont{
+    flex-basis: 100%;
+    display: flex;
+    justify-content: end;
+    padding: 0 7.5px 0 0;
+    align-items: center;
+    border-bottom-style: solid;
+    border-color: #b5b3b3;
+    border-radius: 5px;
+    border-width: 2px;
+}
+
+.plusIcon{
+    opacity: 0.3;
+    /* filter: invert(21%) sepia(92%) saturate(1112%) hue-rotate(96deg) brightness(94%) contrast(102%); */
+    width: 25px;
+}
+
+.descContainer{
+    display: flex;
+    justify-content: space-between;
+}
+
+.fileEditText{
+    width: 100%;
+    min-height: 100px;
+    max-height: 200px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.plusIcon:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+
 .hidden{
-    display: none;
+    display: none !important;
 }
 
 .topRightPad{
@@ -167,11 +222,20 @@
 }
 
 .iconCont{
-    flex-basis: 5%;
-    padding: 0 !important;
+    flex-basis: 10%;
+    padding: 0 10px!important;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
+}
+
+.delCont{
+    display: flex;
+    flex-basis: 10%;
+}
+
+.delButtons{
+    flex-basis: 2%;
 }
 
 .iconCont > img{
@@ -188,8 +252,14 @@
     flex-basis: 100%;
 }
 
-.editIcon{
+#showcaseEditIcon{
     height: 25px;
+    opacity: 0.3;
+}
+
+#showcaseEditIcon:hover{
+    opacity: 1;
+    cursor: pointer;
 }
 
 .trashIcon{
@@ -241,7 +311,16 @@
 }
 
 .showcases{
-    flex-basis: 30%;
+    flex-basis: 45%;
+}
+
+h6{
+    margin: 2px 0;
+}
+
+.accessText{
+    margin-bottom:10px;
+    line-height: 1.2;
 }
 
 .adminPanelRowUser:hover{
