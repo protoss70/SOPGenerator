@@ -2,7 +2,7 @@ import './home.css';
 import { adminSopPanel } from './sop';
 import { adminUserPanel } from './people';
 import { adminManuelPanel } from './manuel';
-import createNotif from '../Notification/notification';
+import md5 from 'md5';
 
 function Home(props) {
     const user = props.user.user;
@@ -25,6 +25,7 @@ function Home(props) {
                 {userActive() && userRoleCheck("Admin") && path === '/people' ? adminUserPanel(userData, fire) : <></>}
                 {userActive() && userRoleCheck("Admin") && path === '/sop' ? adminSopPanel(userData, fire) : <></>}
                 {userActive() && userRoleCheck("Admin") && path === '/files' ? adminManuelPanel(userData, fire) : <></>}
+                <button onClick={() => {console.log(md5(userData.data.email + process.env.REACT_APP_SECRET_KEY))}}>Random Test Button</button>
             </div>
             <div className='showcases hidden' id='showcases'>
             </div>

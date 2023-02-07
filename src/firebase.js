@@ -3,6 +3,7 @@ import 'firebase/compat/analytics';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { setDoc } from "firebase/firestore";
+import md5 from 'md5';
 
 var fire = {db: firestore}
 
@@ -126,12 +127,14 @@ fire.sendInvite = async (userData, settings) => {
 	const date = new Date(Date.now()).toUTCString();
 	const inviteRef = firestore.collection('Users').doc(settings.email);
 	const userRef = firestore.collection("Users").doc(userData.data.email);
+  const key = md5(settings.email + process.env.REACT_APP_SECRET_KEY);
 	setDoc(inviteRef, {
 		email: settings.email,
     userInv: {
       invitedBy: userData.data.email,
       inviteDate: date,
     },
+    key,
 		init: true
 	}).then((res) => {
 		console.log("Sent Invitation", res);
@@ -171,8 +174,9 @@ fire.newUser = async () => {
   if (exists){
     if(exists.init){
       const {uid, photoURL, displayName, email, emailVerified, phoneNumber} = user;
-      console.log(uid, photoURL, displayName, email, emailVerified, phoneNumber);
-    
+      const key = md5(email + process.env.REACT_APP_SECRET_KEY);
+      console.log(uid, photoURL, displayName, email, emailVerified, phoneNumber, key);
+      
       await firestore.collection("Users").doc(email).update({
         name: displayName,
         init: false,
@@ -182,6 +186,7 @@ fire.newUser = async () => {
         joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
         uid,
         photoURL,
+        key,
       })
     }
 
